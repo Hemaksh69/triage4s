@@ -6,6 +6,10 @@ A small Scala library for evidence-backed AI triage, with a local dashboard for 
 The demo uses public issues from [pavanvamsi3/copilot-lens](https://github.com/pavanvamsi3/copilot-lens)
 and never writes to GitHub.
 
+Triage4s is part of the [LLM4S Foundation](https://llm4s.org/foundation/) and is built on
+[LLM4S](https://github.com/llm4s/llm4s). See [Maintainers](#maintainers) and
+[Community](#community) to meet the team.
+
 ## What it does
 
 - Suggests an issue **type** and **component** from a configurable taxonomy.
@@ -241,3 +245,53 @@ node --check modules/demo/src/main/resources/web/app.js
 Tests use deterministic fakes and temporary fixtures: no API keys, Docker, or external services are required.
 They cover output validation, exact input limits, abstention, no retries, sequential runs, source limits,
 snapshot/replay integrity, and evaluation denominators.
+
+## Maintainers
+
+- **Kannupriya Kalra** - [@kannupriyakalra](https://github.com/kannupriyakalra)
+- **Pavan Vamsi** - [@pavanvamsi3](https://github.com/pavanvamsi3)
+
+## Community
+
+Triage4s is a project of the **[LLM4S Foundation](https://llm4s.org/foundation/)**, a global Scala and AI community that helps developers learn AI
+engineering by contributing to real open-source projects such as [LLM4S](https://github.com/llm4s/llm4s), the AI
+framework for Scala, and Triage4s, which is built on it.
+
+### Contribute and grow: global internship opportunities
+
+Contributing to Triage4s is a practical way into AI engineering, and through the
+[LLM4S Foundation](https://llm4s.org/foundation/) it can open doors to global internship opportunities:
+
+- **Build a public track record.** Every merged pull request is real, reviewed AI engineering work in Scala that you
+  can point to in applications and interviews.
+- **Learn from mentors.** Maintainers review your changes and help you grow, and you can meet them and experienced
+  Scala developers at the weekly Dev Hours.
+- **Get noticed for internships.** The foundation connects active contributors with global internship and career
+  pathways, and mentors programmes such as [Google Summer of Code](https://llm4s.org/gsoc/). Consistent, high-quality
+  contributions are the best way to be considered.
+- **Grow from first issue to bigger work.** Start with a
+  [good first issue](https://github.com/pavanvamsi3/triage4s/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22),
+  then take on enhancements here and in the main [LLM4S](https://github.com/llm4s/llm4s) repository.
+
+### Meet the maintainers and community
+
+We meet every **Sunday at 9:00 AM London time** for Dev Hours.
+
+- **Dev Hours calendar:** [luma.com/calendar/cal-Zd9BLb5jbZewxLA](https://luma.com/calendar/cal-Zd9BLb5jbZewxLA). Join the event for the date you want to attend.
+- **Add every Dev Hour to your calendar:** open the
+  [LLM4S Dev Hour weekly calendar link](https://api2.luma.com/ics/get?entity=calendar&id=cal-Zd9BLb5jbZewxLA). It adds
+  all the events for 2026 to your Google Calendar, so you don't miss a Dev Hour.
+
+### Links
+
+- **Global AI Discord community** (~400 members): [discord.com/invite/DjPMufnhG6](https://discord.com/invite/DjPMufnhG6).
+  Please feel free to invite anyone who may benefit from joining our community.
+- **Website and documentation:** [llm4s.org](https://llm4s.org/)
+- **GitHub organization:** [github.com/llm4s](https://github.com/llm4s)
+- **Main repository:** [github.com/llm4s/llm4s](https://github.com/llm4s/llm4s)
+
+### Support the project
+
+- **Open Collective:** [opencollective.com/llm4s](https://opencollective.com/llm4s). If you find LLM4S useful, even a
+  $1 donation would really help support the project.
+- If your company is looking for an AI framework, please help us connect.
