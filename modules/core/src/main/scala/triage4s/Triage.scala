@@ -50,11 +50,22 @@ final class Triage(
   )
 
   override def triage(input: TriageInput, taxonomy: Taxonomy): Either[TriageError, TriageResponse] =
-    for
-      _ <- Validation.validateInput(input)
-      _ <- Validation.validateTaxonomy(taxonomy)
-      response <- attempt(input, taxonomy, maxAttempts)
-    yield response
+    // input first, as before: an issue that is invalid on both counts reports its input
+    Validation
+      .validateInput(input)
+      .flatMap(_ => Validation.validateTaxonomy(taxonomy))
+      .flatMap(_ => classify(input, taxonomy))
+
+  // the taxonomy is checked once for the whole batch, not again per issue
+  override def triageAll(
+      inputs: Seq[TriageInput],
+      taxonomy: Taxonomy
+  ): Either[TriageError, Vector[(String, Either[TriageError, TriageResponse])]] =
+    Classifier.checkBatch(inputs, taxonomy).map(_ => inputs.toVector.map(i => i.id -> classify(i, taxonomy)))
+
+  // classifies one issue against a taxonomy the caller has already validated, with the opt-in retries
+  private def classify(input: TriageInput, taxonomy: Taxonomy): Either[TriageError, TriageResponse] =
+    Validation.validateInput(input).flatMap(_ => attempt(input, taxonomy, maxAttempts))
 
   private def attempt(
       input: TriageInput,
