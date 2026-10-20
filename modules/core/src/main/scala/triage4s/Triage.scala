@@ -10,14 +10,40 @@ import org.llm4s.llmconnect.model.{
 }
 import scala.util.Try
 
+/** The completion settings one classification call uses. The defaults are the request `Triage` has always
+  * sent.
+  *
+  * @param maxTokens
+  *   the completion token budget, 1 to `TriageSettings.MaxTokensLimit`
+  * @param temperature
+  *   the sampling temperature, 0 to 2
+  */
+final case class TriageSettings(maxTokens: Int = 1200, temperature: Double = 0.0):
+  require(
+    maxTokens >= 1 && maxTokens <= TriageSettings.MaxTokensLimit,
+    s"maxTokens must be 1 to ${TriageSettings.MaxTokensLimit}."
+  )
+  require(temperature >= 0.0 && temperature <= 2.0, "temperature must be 0 to 2.")
+
+object TriageSettings:
+  val MaxTokensLimit = 32000
+  val default: TriageSettings = TriageSettings()
+
 /** Classifies issues with an injected LLM client.
   *
   * @param maxAttempts
   *   how many completion calls one issue may use. Only output that fails validation (`InvalidOutput`) is
   *   retried, with the same request; provider failures and invalid input or taxonomy never are. The default,
   *   1, makes exactly one call.
+  * @param settings
+  *   the completion settings of each call: token budget and temperature
   */
-final class Triage(client: LLMClient, useJsonSchema: Boolean = true, maxAttempts: Int = 1) extends Classifier:
+final class Triage(
+    client: LLMClient,
+    useJsonSchema: Boolean = true,
+    maxAttempts: Int = 1,
+    settings: TriageSettings = TriageSettings.default
+) extends Classifier:
   require(
     maxAttempts >= 1 && maxAttempts <= Triage.MaxAttempts,
     s"maxAttempts must be 1 to ${Triage.MaxAttempts}."
@@ -49,7 +75,11 @@ final class Triage(client: LLMClient, useJsonSchema: Boolean = true, maxAttempts
     val format =
       if useJsonSchema then ResponseFormat.JsonSchema(Triage.schema(taxonomy), "triage")
       else ResponseFormat.Json
-    val options = CompletionOptions(temperature = 0.0, maxTokens = Some(1200), responseFormat = Some(format))
+    val options = CompletionOptions(
+      temperature = settings.temperature,
+      maxTokens = Some(settings.maxTokens),
+      responseFormat = Some(format)
+    )
     for
       attempted <- Try(client.complete(conversation, options)).toEither.left.map(e =>
         TriageError.ProviderFailure(
