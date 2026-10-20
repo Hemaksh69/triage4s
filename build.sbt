@@ -4,6 +4,9 @@ ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / licenses := Seq("MIT" -> url("https://opensource.org/licenses/MIT"))
 ThisBuild / homepage := Some(url("https://github.com/pavanvamsi3/triage4s"))
 
+// One LLM4S version for every LLM4S module: since 0.5.0 the library is split into modules that are released together.
+val llm4sVersion = "0.5.1"
+
 lazy val common = Seq(
   scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked"),
   libraryDependencies ++= Seq(
@@ -14,13 +17,18 @@ lazy val common = Seq(
 
 lazy val core = project.in(file("modules/core")).settings(common).settings(
   name := "triage4s-core",
-  libraryDependencies += "org.llm4s" %% "llm4s-core" % "0.4.1"
+  // the core library needs only LLMClient and the model types; it ships no provider client
+  libraryDependencies += "org.llm4s" %% "llm4s-core" % llm4sVersion
 )
 
 lazy val demo = project.in(file("modules/demo")).dependsOn(core).settings(common).settings(
   name := "triage4s-demo",
   publish / skip := true,
-  libraryDependencies += "com.lihaoyi" %% "cask" % "0.10.2",
+  libraryDependencies ++= Seq(
+    "com.lihaoyi" %% "cask" % "0.10.2",
+    // OpenAIClient (and, through llm4s-openai-compatible, OpenAIConfig) live in their own module since LLM4S 0.5.0
+    "org.llm4s" %% "llm4s-openai" % llm4sVersion
+  ),
   Compile / run / fork := true,
   Compile / run / baseDirectory := (ThisBuild / baseDirectory).value,
   Compile / mainClass := Some("triage4s.demo.Main")
